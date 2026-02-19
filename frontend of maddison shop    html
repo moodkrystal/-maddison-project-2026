@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MADDISON SHOP</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+header {
+    background: #111;
+    color: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.cart {
+    background: #ff9800;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px;
+}
+
+.product-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.product-card h3 {
+    margin: 15px 0 10px;
+}
+
+.price {
+    font-size: 18px;
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #111;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #444;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #111;
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>MADDISON SHOP</h1>
+    <div class="cart">Cart: <span id="cart-count">0</span></div>
+</header>
+
+<section class="products">
+
+<div class="product-card">
+    <img src="https://via.placeholder.com/300" alt="Product">
+    <h3>Smart Watch</h3>
+    <div class="price">$120</div>
+    <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+<div class="product-card">
+    <img src="https://via.placeholder.com/300" alt="Product">
+    <h3>Wireless Headphones</h3>
+    <div class="price">$80</div>
+    <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+<div class="product-card">
+    <img src="https://via.placeholder.com/300" alt="Product">
+    <h3>Luxury Sneakers</h3>
+    <div class="price">$150</div>
+    <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+<div class="product-card">
+    <img src="https://via.placeholder.com/300" alt="Product">
+    <h3>Gaming Keyboard</h3>
+    <div class="price">$60</div>
+    <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+</section>
+
+<footer>
+© 2026 MADDISON SHOP. All Rights Reserved.
+</footer>
+
+<script>
+let cartCount = 0;
+
+function addToCart() {
+    cartCount++;
+    document.getElementById("cart-count").innerText = cartCount;
+}
+</script>
+
+</body>
+</html>
+import axios from "axios";
+import { useState } from "react";
+
+export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async () => {
+    const res = await axios.post("http://localhost:5000/api/auth/login", {
+      email,
+      password
+    });
+
+    localStorage.setItem("token", res.data.token);
+    window.location.href = "/admin";
+  };
+
+  return (
+    <div className="flex h-screen items-center justify-center">
+      <div className="bg-white p-6 shadow-lg rounded">
+        <input className="border p-2 mb-2 w-full"
+          placeholder="Email"
+          onChange={e => setEmail(e.target.value)} />
+
+        <input type="password"
+          className="border p-2 mb-2 w-full"
+          placeholder="Password"
+          onChange={e => setPassword(e.target.value)} />
+
+        <button onClick={login}
+          className="bg-black text-white p-2 w-full">
+          Login
+        </button>
+      </div>
+    </div>
+  );
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MADDISON SHOP - Admin Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 flex h-screen items-center justify-center">
+
+    <div class="bg-white p-8 shadow-lg rounded-lg w-96">
+
+        <h2 class="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+
+        <input 
+            id="email"
+            type="email"
+            placeholder="Email"
+            class="border p-2 mb-4 w-full rounded"
+        >
+
+        <input 
+            id="password"
+            type="password"
+            placeholder="Password"
+            class="border p-2 mb-4 w-full rounded"
+        >
+
+        <button 
+            onclick="login()"
+            class="bg-black text-white p-2 w-full rounded hover:bg-gray-800"
+        >
+            Login
+        </button>
+
+        <p id="error" class="text-red-500 mt-4 text-center"></p>
+
+    </div>
+
+<script>
+async function login() {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await axios.post("http://localhost:5000/api/auth/login", {
+            email: email,
+            password: password
+        });
+
+        // Save JWT token
+        localStorage.setItem("token", res.data.token);
+
+        // Redirect to admin dashboard
+        window.location.href = "admin.html";
+
+    } catch (err) {
+        document.getElementById("error").innerText = "Invalid login credentials";
+    }
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MADDISON SHOP - Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+<script>
+    // 🔐 Protect Page
+    if (!localStorage.getItem("token")) {
+        window.location.href = "login.html";
+    }
+</script>
+
+<div class="max-w-5xl mx-auto">
+
+    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+
+    <!-- Add Product Section -->
+    <div class="bg-white p-6 roun
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MADDISON SHOP - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+<div class="bg-white p-8 rounded shadow w-96">
+    <h2 class="text-2xl font-bold mb-4 text-center">Admin Login</h2>
+
+    <input id="email" type="email" placeholder="Email"
+        class="border p-2 mb-3 w-full rounded">
+
+    <input id="password" type="password" placeholder="Password"
+        class="border p-2 mb-4 w-full rounded">
+
+    <button onclick="login()"
+        class="bg-black text-white p-2 w-full rounded">
+        Login
+    </button>
+
+    <p id="error" class="text-red-500 mt-3 text-center"></p>
+</div>
+
+<script>
+async function login() {
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const res = await fetch("http://localhost:5000/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            localStorage.setItem("token", data.token);
+            window.location.href = "admin.html";
+        } else {
+            document.getElementById("error").innerText = data;
+        }
+
+    } catch (err) {
+        document.getElementById("error").innerText = "Server Error";
+    }
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MADDISON SHOP - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-6">
+
+<script>
+// 🔐 PrivateRoute equivalent
+if (!localStorage.getItem("token")) {
+    window.location.href = "login.html";
+}
+</script>
+
+<div class="max-w-4xl mx-auto">
+
+    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+
+    <button onclick="logout()"
+        class="bg-red-600 text-white px-4 py-2 rounded mb-4">
+        Logout
+    </button>
+
+    <div class="bg-white p-6 rounded shadow">
+        <p>Welcome to MADDISON SHOP Admin Panel</p>
+    </div>
+
+</div>
+
+<script>
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>
